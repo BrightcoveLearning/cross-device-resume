@@ -2,55 +2,55 @@
 <html>
 
 <head>
-	<meta charset="UTF-8">
-	<title>Cross-Device Resume Example</title>
+  <meta charset="UTF-8">
+  <title>Cross-Device Resume Example</title>
 </head>
 
 <body>
 
-	<video-js
-	 id="myPlayerID"
-	 data-account="1752604059001"
-	 data-player="hyQW6GByl"
-	 data-embed="default"
-	 controls=""
-	 data-video-id="6156696074001"
-	 data-playlist-id=""
-	 data-application-id=""
-	 width="640" height="360"></video-js>
-	<script src="https://players.brightcove.net/1752604059001/hyQW6GByl_default/index.min.js"></script>
+  <video-js
+    id="myPlayerID"
+    data-account="1752604059001"
+    data-player="hyQW6GByl"
+    data-embed="default"
+    controls=""
+    data-video-id="6156696074001"
+    data-playlist-id=""
+    data-application-id=""
+    width="640" height="360"></video-js>
+  <script src="https://players.brightcove.net/1752604059001/hyQW6GByl_default/index.min.js"></script>
 
-	<script>
-	  videojs.getPlayer('myPlayerID').ready(function() {
-	    var myPlayer = this,
-				accountId = myPlayer.bcinfo.accountId,
+  <script>
+    videojs.getPlayer('myPlayerID').ready(function() {
+      var myPlayer = this,
+    		accountId = myPlayer.bcinfo.accountId,
         options = {};
 
-				// +++ Wait for loadstart event so can use mediainfo object +++
-	      myPlayer.on('loadstart', function() {
-	        var videoId = myPlayer.mediainfo.id,
-	          baseURL = 'https://data.brightcove.com/v1/xdr/accounts/',
-	          endPoint = accountId + '/playheads/' + viewerId + '/' + videoId;
-	        options.proxyURL = "https://solutions.brightcove.com/bcls/bcls-proxy/doc-samples-proxy-v2.php";
-	        options.url = baseURL + endPoint;
-	        options.requestType = "GET";
+    		// +++ Wait for loadstart event so can use mediainfo object +++
+        myPlayer.on('loadstart', function() {
+          var videoId = myPlayer.mediainfo.id,
+            baseURL = 'https://data.brightcove.com/v1/xdr/accounts/',
+            endPoint = accountId + '/playheads/' + viewerId + '/' + videoId;
+          options.proxyURL = "https://solutions.brightcove.com/bcls/bcls-proxy/doc-samples-proxy-v2.php";
+          options.url = baseURL + endPoint;
+          options.requestType = "GET";
 
-	        // +++ Make the request to the Analytics API +++
-	        // Extract views from data returned by Analytics API
-	        makeRequest(options, function(viewsRaw) {
-	          console.table(options);
-	          var viewsCount;
-	          // Remove console.log command for production code
-	          console.log('viewsRaw', viewsRaw);
-	          viewsObject = JSON.parse(viewsRaw);
-	          console.log('viewsObject', viewsObject);
-	          viewsCount = viewsObject.alltime_video_views;
-	          console.log('views', viewsCount);
-	          // Call function to place data in controlbar
-	          placeCountInControlbar(viewsCount);
-	        });
-	      });
-	    });
+          // +++ Make the request to the Analytics API +++
+          // Extract views from data returned by Analytics API
+          makeRequest(options, function(viewsRaw) {
+            console.table(options);
+            var viewsCount;
+            // Remove console.log command for production code
+            console.log('viewsRaw', viewsRaw);
+            viewsObject = JSON.parse(viewsRaw);
+            console.log('viewsObject', viewsObject);
+            viewsCount = viewsObject.alltime_video_views;
+            console.log('views', viewsCount);
+            // Call function to place data in controlbar
+            placeCountInControlbar(viewsCount);
+          });
+        });
+      });
 
 			/**
      * send API request to the proxy
@@ -103,8 +103,8 @@
       httpRequest.send(JSON.stringify(options));
     }
 
-	  });
-	</script>
+    });
+  </script>
 
 </body>
 </html>
