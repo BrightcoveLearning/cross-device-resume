@@ -23,31 +23,36 @@
   <script>
     videojs.getPlayer('myPlayerID').ready(function() {
       var myPlayer = this,
-    		accountId = myPlayer.bcinfo.accountId,
+        accountId = myPlayer.bcinfo.accountId,
         options = {};
 
-    		// +++ Wait for loadstart event so can use mediainfo object +++
+        // Set the viewer id for Brightcove analytics
+        myPlayer.bcAnalytics.client.setUser('user001');
+
+        // +++ Wait for loadstart event so can use mediainfo object +++
         myPlayer.on('loadstart', function() {
           var videoId = myPlayer.mediainfo.id,
+            viewerId = "user001",
             baseURL = 'https://data.brightcove.com/v1/xdr/accounts/',
             endPoint = accountId + '/playheads/' + viewerId + '/' + videoId;
-          options.proxyURL = "https://solutions.brightcove.com/bcls/bcls-proxy/doc-samples-proxy-v2.php";
+          options.proxyURL = "https://solutions.brightcove.com/bcls/bcls-proxy/xdr-sample-proxy.php";
           options.url = baseURL + endPoint;
           options.requestType = "GET";
 
           // +++ Make the request to the Analytics API +++
           // Extract views from data returned by Analytics API
-          makeRequest(options, function(viewsRaw) {
+          makeRequest(options, function(positionRaw) {
             console.table(options);
-            var viewsCount;
+            var playbackPosition;
             // Remove console.log command for production code
-            console.log('viewsRaw', viewsRaw);
-            viewsObject = JSON.parse(viewsRaw);
-            console.log('viewsObject', viewsObject);
-            viewsCount = viewsObject.alltime_video_views;
-            console.log('views', viewsCount);
-            // Call function to place data in controlbar
-            placeCountInControlbar(viewsCount);
+            console.log('positionRaw', positionRaw);
+            positionObject = JSON.parse(positionRaw);
+            console.log('positionObject', positionObject);
+            playbackPosition = positionObject.items[0].playhead_seconds;
+            console.log('playbackPosition', playbackPosition);
+
+            // Set the playhead to the current playback position as defined in the Cross-Device Resume API
+            myPlayer.currentTime(playbackPosition);
           });
         });
       });
